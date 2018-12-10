@@ -1,0 +1,9 @@
+name: net_sample
+version: 0.1.0
+
+authors:
+  - ʕ·ᴥ·ʔAKJ <arcage@denchu.org>
+
+crystal: 0.27.0
+
+license: MIT
