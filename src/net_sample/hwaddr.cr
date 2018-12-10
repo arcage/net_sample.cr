@@ -10,7 +10,7 @@ class NetSample::HWAddr
   end
 
   def self.hwaddr_of(if_name : String) : self
-    hwaddr_of?(if_name) || raise "#{if_name} not exist."
+    hwaddr_of?(if_name) || raise "#{if_name} not exist or has no HW address."
   end
 
   def self.hwaddr_of?(if_name : String) : self | Nil

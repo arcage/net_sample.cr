@@ -30,7 +30,7 @@ require "net_sample"
 # get HW address from given network interface name
 mac_of_eth1 = NetSample::HWAddr.hwaddr_of("eth1")
 
-# ping like command
+# ping like command(require root privirage)
 NetSample::Ping.command("192.0.2.1")
 #=> 
 # PING 192.0.2.1: 56 data bytes
