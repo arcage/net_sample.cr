@@ -4,7 +4,7 @@ This shard includes following the sample codes.
 
 - Gets hardware addresses(MAC address / phisical address) of the network interfaces.
 
-    Implemented for linux(tested of CentOS7) and BSD(tested ofMac OS 10.14).
+    Implemented for linux(tested on CentOS7) and BSD(tested on Mac OS 10.14).
 
 - `ping` like command
 
