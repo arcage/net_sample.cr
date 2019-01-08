@@ -1,6 +1,6 @@
 # Network programing samples for the Crystal language
 
-This shard includes following the sample codes.
+This shard includes following sample codes.
 
 - Gets hardware addresses(MAC address / phisical address) of the network interfaces.
 
