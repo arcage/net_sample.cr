@@ -52,9 +52,14 @@ lib LibC
 end
 
 class NetSample::HWAddr
-  private def self.get_hwaddr : Hash(String, self)
+  private def self.get_nic_info : Hash(String, self)
+    nics = Hash(String, self).new { |h,k| h[k] = self.new(k)}
+    get_hwaddr(nics)
+    nics
+  end
+
+  private def self.get_hwaddr(nics : Hash(String, self)) : Hash(String, self)
     if_names = [] of String
-    hwaddrs = {} of String => self
     ifconf = LibC::Ifconf.new
     ifconf_req = LibC::IfconfReq.new { LibC::Ifreq.new }
     ifconf.ifc_len = sizeof(LibC::IfconfReq)
@@ -75,9 +80,8 @@ class NetSample::HWAddr
           raise "Error: #{Errno.new(Errno.value)}"
         end
         hwaddr = hwareq.ifr_req_u.ifr_addr.sa_data.to_slice[0, LibC::IFHWADDRLEN].clone
-        hwaddrs[if_name] = self.new(hwaddr)
+        nics[if_name].hwaddr = self.new(hwaddr)
       end
     end
-    hwaddrs
   end
 end
