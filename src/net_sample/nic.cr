@@ -1,34 +1,43 @@
 require "./nic/*"
 
 lib LibC
-  IFHWADDRLEN = 6
+  IFHWADDRLEN      =  6
+  INET_ADDRSTRLEN  = 16
+  INET6_ADDRSTRLEN = 46
+
+  fun getifaddrs(ifaddr : Ifaddrs*) : Int
+  fun inet_ntop(af : Int, src : Void*, dst : Char*, size : SocklenT) : Char*
 end
 
 class NetSample::NIC
-  @@nics : Hash(String, self) = get_nic_info
+  @@nics : Hash(String, self)?
+
+  def self.nics
+    @@nics ||= get_nic_info
+  end
 
   def self.inaddr_of(if_name)
-    @@nics[if_name]?.try &.inaddr
+    self.nics[if_name]?.try &.inaddr
   end
 
   def self.in6addr_of(if_name)
-    @@nics[if_name]?.try &.in6addr
+    self.nics[if_name]?.try &.in6addr
   end
 
   def self.hwaddr_of(if_name)
-    @@nics[if_name]?.try &.hwaddr
+    self.nics[if_name]?.try &.hwaddr
   end
 
   def self.[](if_name)
-    @@nics[if_name]
+    self.nics[if_name]
   end
 
   def self.[]?(if_name)
-    @@nics[if_name]?
+    self.nics[if_name]?
   end
 
   def self.each(&block)
-    @@nics.values.each do |nic|
+    self.nics.values.each do |nic|
       yield nic
     end
   end
@@ -77,4 +86,3 @@ class NetSample::NIC
     end
   end
 end
-

@@ -1,20 +1,17 @@
 {% skip_file unless flag?(:bsd) || flag?(:darwin) %}
 
 lib LibC
-  AF_LINK       = 18
-  SDL_DATA_SIZE = 32
-  INET_ADDRSTRLEN = 16
-  INET6_ADDRSTRLEN = 46
+  AF_LINK = 18
 
   struct SockaddrDl
-    sdl_len    : UChar
+    sdl_len : UChar
     sdl_family : SaFamilyT
-    sdl_index  : UShort
-    sdl_type   : UChar
-    sdl_nlen   : UChar
-    sdl_alen   : UChar
-    sdl_slen   : UChar
-    sdl_data   : Char[SDL_DATA_SIZE]
+    sdl_index : UShort
+    sdl_type : UChar
+    sdl_nlen : UChar
+    sdl_alen : UChar
+    sdl_slen : UChar
+    sdl_data : Char[SDL_DATA_SIZE]
     {% if flag?(:darwin) %}
     sdl_rcf    : UShort
     sdl_route  : UShort[16]
@@ -30,14 +27,11 @@ lib LibC
     ifa_dstaddr : Sockaddr*
     ifa_data : Void*
   end
-
-  fun getifaddrs(ifaddr : Ifaddrs*) : Int
-  fun inet_ntop(af : Int, src : Void*, dst : Char*, size : SocklenT) : Char*
 end
 
 class NetSample::NIC
   private def self.get_nic_info : Hash(String, self)
-    nics = Hash(String, self).new { |h,k| h[k] = self.new(k)}
+    nics = Hash(String, self).new { |h, k| h[k] = self.new(k) }
     ifa = LibC::Ifaddrs.new
     ifap = pointerof(ifa)
     LibC.getifaddrs(ifap)
@@ -64,7 +58,6 @@ class NetSample::NIC
             nlen = dla.sdl_nlen
             data = dla.sdl_data.to_slice.clone
             alen = nlen > LibC::SDL_DATA_SIZE - LibC::IFHWADDRLEN ? LibC::SDL_DATA_SIZE - nlen : LibC::IFHWADDRLEN
-            if_name = String.new(data[0, nlen])
             hwaddr = data[nlen, alen]
             nics[if_name].hwaddr = hwaddr
           end
