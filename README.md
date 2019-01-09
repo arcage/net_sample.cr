@@ -1,10 +1,14 @@
 # Network programing samples for the Crystal language
 
-This shard includes following the sample codes.
+This shard includes following sample codes.
 
-- Gets hardware addresses(MAC address / phisical address) of the network interfaces.
+- Gets following informations of the ethernet interfaces.
 
-    Implemented for linux(tested on CentOS7) and BSD(tested on Mac OS 10.14).
+    - hardware address a.k.a. MAC address or phisical address
+    - IPv4 address
+    - IPv6 address
+
+    _Implemented for linux(tested on CentOS7) and BSD(tested on Mac OS 10.14)._
 
 - `ping` like command
 
@@ -27,8 +31,12 @@ dependencies:
 ```crystal
 require "net_sample"
 
-# get HW address from given network interface name
-mac_of_eth1 = NetSample::HWAddr.hwaddr_of("eth1")
+# get interface names
+NetSample::NIC.ifnames
+#=> ["lo0", "eth1"]
+
+puts eth1 = NetSample::NIC["eth1"]
+#=> <NIC: "eth1", inaddr: 192.0.2.100, in6addr: fe80::1234:abcd, hwaddr: aa:bb:cc:dd:ee:ff>
 
 # ping like command(require root privirage)
 NetSample::Ping.command("192.0.2.1")
