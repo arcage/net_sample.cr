@@ -2,6 +2,7 @@
 
 lib LibC
   AF_LINK = 18
+  SDL_DATA_SIZE = 256
 
   struct SockaddrDl
     sdl_len : UChar

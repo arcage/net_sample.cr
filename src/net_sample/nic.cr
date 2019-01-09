@@ -16,6 +16,10 @@ class NetSample::NIC
     @@nics ||= get_nic_info
   end
 
+  def self.ifnames
+    self.nics.keys
+  end
+
   def self.inaddr_of(if_name)
     self.nics[if_name]?.try &.inaddr
   end
@@ -51,10 +55,10 @@ class NetSample::NIC
 
   def to_s(io : IO)
     io << "<NIC: " << @name.inspect
-    io << ", " << "inet: " << @inaddr if @inaddr
-    io << ", " << "inet6: " << @in6addr if @in6addr
+    io << ", " << "inaddr: " << @inaddr if @inaddr
+    io << ", " << "in6addr: " << @in6addr if @in6addr
     if @hwaddr
-      io << ", " << "hw: "
+      io << ", " << "hwaddr: "
       internal_hwaddr(io)
     end
     io << ">"

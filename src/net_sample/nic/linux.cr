@@ -49,14 +49,13 @@ class NetSample::NIC
         when LibC::AF_INET6
           ina = ifa_addr.as(LibC::SockaddrIn6*).value
           dst = StaticArray(UInt8, LibC::INET6_ADDRSTRLEN).new(0)
-          addr6 = ina.sin6_addr.__u6_addr.__u6_addr8
+          addr6 = ina.sin6_addr.__in6_u.__u6_addr8
           LibC.inet_ntop(LibC::AF_INET6, addr6.to_unsafe.as(Void*), dst, LibC::INET6_ADDRSTRLEN)
           nics[if_name].in6addr = String.new(dst.to_unsafe)
         when LibC::AF_PACKET
           lla = ifa_addr.as(LibC::SockaddrLl*).value
-          lla = String.new(data[0, LibC::IFHWADDRLEN])
           data = lla.sll_addr.to_slice.clone
-          hwaddr = data[nlen, alen]
+          hwaddr = data[0, LibC::IFHWADDRLEN]
           nics[if_name].hwaddr = hwaddr
         end
       end
