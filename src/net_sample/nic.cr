@@ -5,7 +5,8 @@ lib LibC
   INET_ADDRSTRLEN  = 16
   INET6_ADDRSTRLEN = 46
 
-  fun getifaddrs(ifaddr : Ifaddrs*) : Int
+  fun getifaddrs(ifaddr : Ifaddrs**) : Int
+  fun freeifaddrs(ifaddr : Ifaddrs*) : Void
   fun inet_ntop(af : Int, src : Void*, dst : Char*, size : SocklenT) : Char*
 end
 

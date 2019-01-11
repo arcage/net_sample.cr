@@ -1,7 +1,7 @@
 {% skip_file unless flag?(:bsd) || flag?(:darwin) %}
 
 lib LibC
-  AF_LINK = 18
+  AF_LINK       =  18
   SDL_DATA_SIZE = 256
 
   struct SockaddrDl
@@ -33,9 +33,10 @@ end
 class NetSample::NIC
   private def self.get_nic_info : Hash(String, self)
     nics = Hash(String, self).new { |h, k| h[k] = self.new(k) }
-    ifa = LibC::Ifaddrs.new
-    ifap = pointerof(ifa)
-    LibC.getifaddrs(ifap)
+    if LibC.getifaddrs(out ifaddrs) == -1
+      raise "Error: #{Errno.new(Errno.value)}\n"
+    end
+    ifap = ifaddrs.as(LibC::Ifaddrs*)
     while ifap
       ifa = ifap.value
       if ifa_addr = ifa.ifa_addr
@@ -66,6 +67,7 @@ class NetSample::NIC
       end
       ifap = ifa.ifa_next
     end
+    LibC.freeifaddrs(ifaddrs)
     nics
   end
 end
