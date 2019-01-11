@@ -31,7 +31,7 @@ lib LibC
 end
 
 class NetSample::NIC
-  def self.get_nic_info : Hash(String, self)
+  private def self.get_nic_info : Hash(String, self)
     nics = Hash(String, self).new { |h, k| h[k] = self.new(k) }
     if LibC.getifaddrs(out ifaddrs) == -1
       raise "Error: #{Errno.new(Errno.value)}\n"
