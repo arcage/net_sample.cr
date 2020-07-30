@@ -18,13 +18,13 @@ module NetSample::Ping
       bytes = send_icmp.to_bytes
       begin
         LibC.sendto(@socket.fd, bytes.to_unsafe.as(Void*), bytes.size, 0, @host, @host.size)
-        send_time = Time.now
+        send_time = Time.local
         bytes = Bytes.new(1500)
         bytes_read, _ = @socket.receive(bytes)
       rescue ex
         return Result.load(send_icmp, ex)
       end
-      receive_time = Time.now
+      receive_time = Time.local
       rtt = (receive_time - send_time).total_milliseconds
       packet = ICMP::Packet.new(bytes[0, bytes_read])
       return Result.load(send_icmp, packet, rtt)

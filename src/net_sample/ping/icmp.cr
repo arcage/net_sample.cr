@@ -65,16 +65,16 @@ module NetSample::Ping
       @code = 0u8
       @checksum = 0u16
 
-      abstract def data(io) : Bytes
+      abstract def data(io)
 
-      def data
+      def data : Bytes
         io = IO::Memory.new(1500)
         data(io)
         io.rewind
         io.to_slice
       end
 
-      def to_bytes
+      def to_bytes : Bytes
         io = IO::Memory.new(1500)
         io.write_byte(@type)
         io.write_byte(@code)
@@ -115,7 +115,7 @@ module NetSample::Ping
         end
       end
 
-      def data(io : IO) : Bytes
+      def data(io : IO)
         io.write_bytes(@id, IO::ByteFormat::NetworkEndian)
         io.write_bytes(@sequence, IO::ByteFormat::NetworkEndian)
         io.write(@message.to_slice)

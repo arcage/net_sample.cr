@@ -12,7 +12,7 @@ module NetSample::Ping
     puts "PING #{host}: #{data_length} data bytes"
 
     client = Ping::Client.new(host)
-    id = Process.pid.to_u16
+    id = (Process.pid & UInt16::MAX).to_u16
     sequence = 0u16
     rtt_list = [] of Float64
     while sequence < count
