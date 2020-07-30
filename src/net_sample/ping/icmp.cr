@@ -115,7 +115,7 @@ module NetSample::Ping
         end
       end
 
-      def data(io : IO)
+      def data(io : IO) : Bytes
         io.write_bytes(@id, IO::ByteFormat::NetworkEndian)
         io.write_bytes(@sequence, IO::ByteFormat::NetworkEndian)
         io.write(@message.to_slice)

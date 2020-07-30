@@ -37,7 +37,7 @@ module NetSample::Ping
   end
 
   class EchoReplyReceived < ICMPReceived
-    def message
+    def message : String
       echo_reply = ICMP::EchoReply.new(@ip.data)
       @valid = (echo_reply == ICMP::EchoReply.from_request(@echo_request))
       if valid?
@@ -49,13 +49,13 @@ module NetSample::Ping
   end
 
   class DestinationUnreachable < ICMPReceived
-    def message
+    def message : String
       "Destination Unreachable.(code: #{@code}"
     end
   end
 
   class OtherICMPRecieved < ICMPReceived
-    def message
+    def message : String
       "Other ICMP packet received.(type: #{@type}, code: #{@code})"
     end
   end
@@ -64,7 +64,7 @@ module NetSample::Ping
     def initialize(@echo_request : ICMP::EchoRequest, @ex : Exception)
     end
 
-    def message
+    def message : String
       "#{@ex.message} (#{@ex.class})"
     end
   end
