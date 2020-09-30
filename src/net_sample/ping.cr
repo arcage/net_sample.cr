@@ -5,7 +5,6 @@ require "./ping/result"
 
 # TODO: Write documentation for `Ping`
 module NetSample::Ping
-
   def self.command(host : String, *, count : UInt16 = 5u16, data = "ping!")
     raise Error.new("ping count must be greater than 0.") unless count > 0
     data_length = [56, data.size].max

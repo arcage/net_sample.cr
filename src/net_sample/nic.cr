@@ -47,6 +47,31 @@ class NetSample::NIC
     end
   end
 
+  private def self.get_nic_info : Hash(String, self)
+    nics = Hash(String, self).new { |h, k| h[k] = self.new(k) }
+    if LibC.getifaddrs(out ifaddrs) == -1
+      raise Error.new("errno #{Errno.value} on getifaddr()")
+    end
+    ifap = ifaddrs.as(LibC::Ifaddrs*)
+    while ifap
+      ifa = ifap.value
+      if info = read_ifa(ifa)
+        nic = nics[info.name]
+        case info.type
+        when NetSample::NIC::Info::Type::InAddr
+          nic.inaddr = String.new(info.value)
+        when NetSample::NIC::Info::Type::In6Addr
+          nic.in6addr = String.new(info.value)
+        when NetSample::NIC::Info::Type::HWAddr
+          nic.hwaddr = info.value
+        end
+      end
+      ifap = ifa.ifa_next
+    end
+    LibC.freeifaddrs(ifaddrs)
+    nics
+  end
+
   property inaddr : String?
   property in6addr : String?
   setter hwaddr : Bytes?

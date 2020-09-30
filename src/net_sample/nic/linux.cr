@@ -29,40 +29,4 @@ lib LibC
   end
 end
 
-class NetSample::NIC
-  private def self.get_nic_info : Hash(String, self)
-    nics = Hash(String, self).new { |h, k| h[k] = self.new(k) }
-    if LibC.getifaddrs(out ifaddrs) == -1
-      raise Error.new("errno #{Errno.value} on getifaddr()")
-    end
-    ifap = ifaddrs.as(LibC::Ifaddrs*)
-    while ifap
-      ifa = ifap.value
-      if ifa_addr = ifa.ifa_addr
-        if_name = String.new(ifa.ifa_name)
-        case ifa_addr.value.sa_family
-        when LibC::AF_INET
-          ina = ifa_addr.as(LibC::SockaddrIn*).value
-          dst = StaticArray(UInt8, LibC::INET_ADDRSTRLEN).new(0)
-          addr = ina.sin_addr.s_addr
-          LibC.inet_ntop(LibC::AF_INET, pointerof(addr).as(Void*), dst, LibC::INET_ADDRSTRLEN)
-          nics[if_name].inaddr = String.new(dst.to_unsafe)
-        when LibC::AF_INET6
-          ina = ifa_addr.as(LibC::SockaddrIn6*).value
-          dst = StaticArray(UInt8, LibC::INET6_ADDRSTRLEN).new(0)
-          addr6 = ina.sin6_addr.__in6_u.__u6_addr8
-          LibC.inet_ntop(LibC::AF_INET6, addr6.to_unsafe.as(Void*), dst, LibC::INET6_ADDRSTRLEN)
-          nics[if_name].in6addr = String.new(dst.to_unsafe)
-        when LibC::AF_PACKET
-          lla = ifa_addr.as(LibC::SockaddrLl*).value
-          data = lla.sll_addr.to_slice.clone
-          hwaddr = data[0, LibC::IFHWADDRLEN]
-          nics[if_name].hwaddr = hwaddr
-        end
-      end
-      ifap = ifa.ifa_next
-    end
-    LibC.freeifaddrs(ifaddrs)
-    nics
-  end
-end
+require "./linux/*"
