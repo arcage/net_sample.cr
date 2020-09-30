@@ -56,7 +56,7 @@ module NetSample::Ping
 
   class OtherICMPRecieved < ICMPReceived
     def message : String
-      "Other ICMP packet received.(type: #{@type}, code: #{@code})"
+      "Unsupported ICMP packet received.(type: #{@type}, code: #{@code})"
     end
   end
 

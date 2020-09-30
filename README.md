@@ -8,7 +8,7 @@ This shard includes following sample codes.
     - IPv4 address
     - IPv6 address
 
-    _Implemented for linux(tested on CentOS7) and BSD(tested on Mac OS 10.14)._
+    _Tested on gnu(CentOS8)/musl(official alpine linux image) linux and  and BSD(Mac OS 10.14)._
 
 - `ping` like command
 
