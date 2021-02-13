@@ -65,7 +65,7 @@ module NetSample::Ping
       @code = 0u8
       @checksum = 0u16
 
-      abstract def data(io)
+      abstract def data(io : IO)
 
       def data : Bytes
         io = IO::Memory.new(1500)
